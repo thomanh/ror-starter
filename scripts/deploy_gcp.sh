@@ -14,6 +14,7 @@ helm version
 
 helm dependency update $HELM_CHART
 
+HELM_RELEASE_NAME=${IMG_TAG:0:5}-${PROJECT_NAMESPACE:0:5}-${PROJECT_NAME:0:5}
 echo "helm upgrade $HELM_RELEASE_NAME --install $HELM_CHART"
 
 helm upgrade $HELM_RELEASE_NAME --install $HELM_CHART \
