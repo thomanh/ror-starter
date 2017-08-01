@@ -14,7 +14,13 @@ helm version
 
 helm dependency update $HELM_CHART
 
-HELM_RELEASE_NAME=${IMG_TAG:0:5}-${PROJECT_NAMESPACE:0:5}-${PROJECT_NAME:0:5}
+# should normalize the helm release name
+IMG_TAG=`echo $IMG_TAG | sed 's/features\/#//g'`
+count=0
+IMG_TAG=`for ((i=0;i<${#IMG_TAG};i++)); do [[ "${IMG_TAG:$i:1}" =~ [0-9]|[a-Z] ]] && [[ $((++count)) -eq 5 ]] && echo "${IMG_TAG:0:$((i+1))}"; done`
+HELM_RELEASE_NAME=$IMG_TAG-${PROJECT_NAMESPACE:0:5}-${PROJECT_NAME:0:5}
+
+#
 echo "helm upgrade $HELM_RELEASE_NAME --install $HELM_CHART"
 
 helm upgrade $HELM_RELEASE_NAME --install $HELM_CHART \
